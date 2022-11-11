@@ -5283,13 +5283,6 @@ write_files:
     {{GetVariableProperty "cloudInitData" "provisionInstallsUbuntu"}}
 {{end}}
 
-- path: {{GetExampleFilepath}}
-  permissions: "0644"
-  encoding: gzip
-  owner: root
-  content: |
-    This is a new example file created by cloud-init.
-
 - path: {{GetCSEConfigScriptFilepath}}
   permissions: "0744"
   encoding: gzip
@@ -5977,6 +5970,12 @@ write_files:
     AZURE_ENVIRONMENT_FILEPATH=/etc/kubernetes/{{GetTargetEnvironment}}.json
 {{end}}
     #EOF
+
+- path: {{GetExampleFilepath}}
+  permissions: "0644"
+  owner: root
+  content: |
+    This is a new example file created by cloud-init.
 
 - path: /opt/azure/containers/kubelet.sh
   permissions: "0755"
