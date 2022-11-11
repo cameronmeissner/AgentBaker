@@ -250,6 +250,7 @@ write_files:
   owner: root
   content: |
     This is a new example file created by cloud-init.
+    #EOF
 
 - path: /opt/azure/containers/kubelet.sh
   permissions: "0755"
