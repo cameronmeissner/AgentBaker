@@ -724,6 +724,9 @@ func getContainerServiceFuncMap(config *datamodel.NodeBootstrappingConfiguration
 		"GetCSEHelpersScriptDistroFilepath": func() string {
 			return cseHelpersScriptDistroFilepath
 		},
+		"GetExampleFilepath": func() string {
+			return newExampleFilepath
+		},
 		"GetCSEInstallScriptFilepath": func() string {
 			return cseInstallScriptFilepath
 		},
