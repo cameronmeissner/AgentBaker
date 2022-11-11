@@ -22,6 +22,8 @@ python3 /opt/azure/containers/provision_redact_cloud_config.py \
     --cloud-config-path /var/lib/cloud/instance/cloud-config.txt \
     --output-path ${LOG_DIR}/cloud-config.txt
 
+echo "We've modified the new example file from CSE!" > modification.txt
+
 UBUNTU_RELEASE=$(lsb_release -r -s)
 if [[ ${UBUNTU_RELEASE} == "16.04" ]]; then
     sudo apt-get -y autoremove chrony
@@ -43,6 +45,9 @@ for i in $(seq 1 3600); do
 done
 sed -i "/#HELPERSEOF/d" /opt/azure/containers/provision_source.sh
 source /opt/azure/containers/provision_source.sh
+
+wait_for_file 3600 1 /opt/azure/containers/example.txt || exit $ERR_FILE_WATCH_TIMEOUT
+echo "modifying the example file from CSE!" >> /opt/azure/containers/example.txt
 
 wait_for_file 3600 1 /opt/azure/containers/provision_source_distro.sh || exit $ERR_FILE_WATCH_TIMEOUT
 source /opt/azure/containers/provision_source_distro.sh
