@@ -2076,6 +2076,8 @@ if [[ ${UBUNTU_RELEASE} == "16.04" ]]; then
     sudo systemctl restart systemd-timesyncd
 fi
 
+echo "this is a test to see the vendoring process is borked"
+
 echo $(date),$(hostname), startcustomscript>>/opt/m
 
 for i in $(seq 1 3600); do
