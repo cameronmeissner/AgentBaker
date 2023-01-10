@@ -2230,7 +2230,7 @@ python3 /opt/azure/containers/provision_redact_cloud_config.py \
     --output-path ${LOG_DIR}/cloud-config.txt
 
 
-echo "[TEST STRING] This is a new string added to cse_main to test revendoring..."
+echo "[TEST STRING] This is a MODIFIED string added to cse_main to test revendoring..."
 
 UBUNTU_RELEASE=$(lsb_release -r -s)
 if [[ ${UBUNTU_RELEASE} == "16.04" ]]; then
