@@ -235,7 +235,7 @@ const (
 )
 
 const (
-	LinuxSIGImageVersion string = "2023.01.10"
+	LinuxSIGImageVersion string = "000.000.000"
 
 	// DO NOT MODIFY: used for freezing linux images with docker
 	FrozenLinuxSIGImageVersionForDocker string = "2022.08.29"
