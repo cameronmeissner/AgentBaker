@@ -276,6 +276,7 @@ var LinuxSIGImageVersion = getSIGVersionFromEmbeddedString(linuxVersionJSONConte
 var Ubuntu2204TLSIGImageVersion = getSIGVersionFromEmbeddedString(ubuntu2204JSONContentsEmbedded)
 var CBLMarinerV2Gen2TLSIGImageVersion = getSIGVersionFromEmbeddedString(marinerV2Gen2JSONContentsEmbedded)
 var EdgeZoneSIGImageVersion = getSIGVersionFromEmbeddedString(edgeZoneJSONContentsEmbedded)
+var Ubuntu2204Gen2MinimalSIGImageVersion = "111.111.2024"
 
 func getSIGVersionFromEmbeddedString(contents string) string {
 
