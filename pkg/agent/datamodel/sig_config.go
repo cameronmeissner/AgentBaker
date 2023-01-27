@@ -272,7 +272,7 @@ var marinerV2Gen2JSONContentsEmbedded string
 //go:embed edge_zone_sig_version.json
 var edgeZoneJSONContentsEmbedded string
 
-var LinuxSIGImageVersion = getSIGVersionFromEmbeddedString(linuxVersionJSONContentsEmbedded)
+var LinuxSIGImageVersion = "111.111.111"
 var Ubuntu2204TLSIGImageVersion = getSIGVersionFromEmbeddedString(ubuntu2204JSONContentsEmbedded)
 var CBLMarinerV2Gen2TLSIGImageVersion = getSIGVersionFromEmbeddedString(marinerV2Gen2JSONContentsEmbedded)
 var EdgeZoneSIGImageVersion = getSIGVersionFromEmbeddedString(edgeZoneJSONContentsEmbedded)
