@@ -430,7 +430,7 @@ var (
 		ResourceGroup: AKSUbuntuResourceGroup,
 		Gallery:       AKSUbuntuGalleryName,
 		Definition:    "2204gen2containerd",
-		Version:       LinuxSIGImageVersion,
+		Version:       Ubuntu2204Gen2MinimalSIGImageVersion,
 	}
 
 	SIGUbuntuContainerd2204TLGen2ImageConfigTemplate = SigImageConfigTemplate{
