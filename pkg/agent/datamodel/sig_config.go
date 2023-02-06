@@ -272,6 +272,7 @@ var marinerV2Gen2JSONContentsEmbedded string
 //go:embed edge_zone_sig_version.json
 var edgeZoneJSONContentsEmbedded string
 
+var MinimalVersion = "222.222.223"
 var LinuxSIGImageVersion = getSIGVersionFromEmbeddedString(linuxVersionJSONContentsEmbedded)
 var Ubuntu2204TLSIGImageVersion = getSIGVersionFromEmbeddedString(ubuntu2204JSONContentsEmbedded)
 var CBLMarinerV2Gen2TLSIGImageVersion = getSIGVersionFromEmbeddedString(marinerV2Gen2JSONContentsEmbedded)
@@ -429,7 +430,7 @@ var (
 		ResourceGroup: AKSUbuntuResourceGroup,
 		Gallery:       AKSUbuntuGalleryName,
 		Definition:    "2204gen2containerd",
-		Version:       LinuxSIGImageVersion,
+		Version:       MinimalVersion,
 	}
 
 	SIGUbuntuContainerd2204TLGen2ImageConfigTemplate = SigImageConfigTemplate{
