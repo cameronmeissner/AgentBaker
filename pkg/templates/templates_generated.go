@@ -2532,9 +2532,9 @@ if [[ "${DISABLE_SSH}" == "true" ]]; then
 fi
 
 if [[ "${SHOULD_CONFIGURE_HTTP_PROXY}" == "true" ]]; then
-    if [[ "${SHOULD_CONFIGURE_HTTP_PROXY_CA}" == "true" ]]; then
-        configureHTTPProxyCA || exit $ERR_UPDATE_CA_CERTS
-    fi
+    # if [[ "${SHOULD_CONFIGURE_HTTP_PROXY_CA}" == "true" ]]; then
+    #     configureHTTPProxyCA || exit $ERR_UPDATE_CA_CERTS
+    # fi
     configureEtcEnvironment
 fi
 
