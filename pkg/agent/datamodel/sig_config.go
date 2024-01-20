@@ -331,6 +331,8 @@ const (
 	Windows23H2SIGImageVersion string = "25398.2022.221114"
 
 	FrozenAzureLinuxSIGImageVersion string = "202311.07.0"
+
+	PrivateImageVersion string = "202401.09.2"
 )
 
 type sigVersion struct {
@@ -452,7 +454,7 @@ var (
 		ResourceGroup: AKSUbuntuResourceGroup,
 		Gallery:       AKSUbuntuGalleryName,
 		Definition:    "2004fipscontainerd",
-		Version:       LinuxSIGImageVersion,
+		Version:       PrivateImageVersion,
 	}
 
 	// not a typo, this image was generated on 2021.05.20 UTC and assigned this version.
@@ -460,42 +462,42 @@ var (
 		ResourceGroup: AKSUbuntuResourceGroup,
 		Gallery:       AKSUbuntuGalleryName,
 		Definition:    "2004gen2fipscontainerd",
-		Version:       LinuxSIGImageVersion,
+		Version:       PrivateImageVersion,
 	}
 
 	SIGUbuntuArm64Containerd2204Gen2ImageConfigTemplate = SigImageConfigTemplate{
 		ResourceGroup: AKSUbuntuResourceGroup,
 		Gallery:       AKSUbuntuGalleryName,
 		Definition:    "2204gen2arm64containerd",
-		Version:       LinuxSIGImageVersion,
+		Version:       PrivateImageVersion,
 	}
 
 	SIGUbuntuContainerd2204ImageConfigTemplate = SigImageConfigTemplate{
 		ResourceGroup: AKSUbuntuResourceGroup,
 		Gallery:       AKSUbuntuGalleryName,
 		Definition:    "2204containerd",
-		Version:       LinuxSIGImageVersion,
+		Version:       PrivateImageVersion,
 	}
 
 	SIGUbuntuContainerd2204Gen2ImageConfigTemplate = SigImageConfigTemplate{
 		ResourceGroup: AKSUbuntuResourceGroup,
 		Gallery:       AKSUbuntuGalleryName,
 		Definition:    "2204gen2containerd",
-		Version:       LinuxSIGImageVersion,
+		Version:       PrivateImageVersion,
 	}
 
 	SIGUbuntuContainerd2204TLGen2ImageConfigTemplate = SigImageConfigTemplate{
 		ResourceGroup: AKSUbuntuResourceGroup,
 		Gallery:       AKSUbuntuGalleryName,
 		Definition:    "2204gen2TLcontainerd",
-		Version:       LinuxSIGImageVersion,
+		Version:       PrivateImageVersion,
 	}
 
 	SIGUbuntuContainerd2004CVMGen2ImageConfigTemplate = SigImageConfigTemplate{
 		ResourceGroup: AKSUbuntuResourceGroup,
 		Gallery:       AKSUbuntuGalleryName,
 		Definition:    "2004gen2CVMcontainerd",
-		Version:       LinuxSIGImageVersion,
+		Version:       PrivateImageVersion,
 	}
 
 	SIGUbuntuMinimalContainerd2204ImageConfigTemplate = SigImageConfigTemplate{
@@ -759,7 +761,7 @@ func getSigUbuntuEdgeZoneImageConfigMapWithOpts(opts ...SigImageConfigOpt) map[D
 		ResourceGroup: AKSUbuntuEdgeZoneResourceGroup,
 		Gallery:       AKSUbuntuEdgeZoneGalleryName,
 		Definition:    "2204containerd",
-		Version:       LinuxSIGImageVersion,
+		Version:       PrivateImageVersion,
 	}
 
 	// This image is using a specific resource group and gallery name for edge zone scenario.
@@ -767,7 +769,7 @@ func getSigUbuntuEdgeZoneImageConfigMapWithOpts(opts ...SigImageConfigOpt) map[D
 		ResourceGroup: AKSUbuntuEdgeZoneResourceGroup,
 		Gallery:       AKSUbuntuEdgeZoneGalleryName,
 		Definition:    "2204gen2containerd",
-		Version:       LinuxSIGImageVersion,
+		Version:       PrivateImageVersion,
 	}
 
 	return map[Distro]SigImageConfig{
