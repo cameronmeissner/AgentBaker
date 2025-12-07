@@ -27,31 +27,31 @@ type FeatureFlags struct {
 func LoadVHDConfigFromEnv() (VHD, error) {
 	os, err := getOSFromEnv()
 	if err != nil {
-		return VHD{}, err
+		return VHD{}, fmt.Errorf("getting OS from environment: %w", err)
 	}
 	osVersion, err := getOSVersionFromEnv()
 	if err != nil {
-		return VHD{}, err
+		return VHD{}, fmt.Errorf("getting OS version from environment: %w", err)
 	}
 	hyperVGeneration, err := getHyperVGenerationFromEnv()
 	if err != nil {
-		return VHD{}, err
+		return VHD{}, fmt.Errorf("getting hyper-V generation version from environment: %w", err)
 	}
 	architecture, err := getArchitectureFromEnv()
 	if err != nil {
-		return VHD{}, err
+		return VHD{}, fmt.Errorf("getting architecture from environment: %w", err)
 	}
 	cgroupsV2, err := getCGroupsV2FromEnv()
 	if err != nil {
-		return VHD{}, err
+		return VHD{}, fmt.Errorf("determining cgroupsv2 enablement from environment: %w", err)
 	}
 	fips, err := getFIPSFromEnv()
 	if err != nil {
-		return VHD{}, err
+		return VHD{}, fmt.Errorf("determining FIPS enablement from environment: %w", err)
 	}
 	trustedLaunch, err := getTrustedLaunchFromEnv()
 	if err != nil {
-		return VHD{}, err
+		return VHD{}, fmt.Errorf("determining Trusted Launch enablement from environment: %w", err)
 	}
 	return VHD{
 		OS:               os,
