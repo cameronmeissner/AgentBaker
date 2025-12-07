@@ -144,11 +144,7 @@
         "direction": "upload",
         "destination": "/home/packer/",
         "sources": [
-        {{- if eq .Architecture "arm64" }}
-            "aks-node-controller/bin/aks-node-controller-linux-arm64",
-        {{- else }}
-            "aks-node-controller/bin/aks-node-controller-linux-amd64",
-        {{- end }}
+            "aks-node-controller/bin/aks-node-controller-linux-{{GetArchitectureExtension}}",
             "vhdbuilder/lister/bin/lister",
             "parts/linux/cloud-init/artifacts/aks-node-controller.service",
             "parts/linux/cloud-init/artifacts/cloud-init-status-check.sh",
@@ -292,10 +288,10 @@
     },
     {
       "type": "shell",
-      "inline": "{{GetRebootCommand .}}",
+      "inline": "{{GetRebootCommand}}",
       "expect_disconnect": true,
       "skip_clean": true,
-      "pause_after": "{{GetRebootPauseDuration .}}"
+      "pause_after": "{{GetRebootPauseDuration}}"
     },
     {
       "type": "shell",
@@ -331,10 +327,10 @@
     },
     {
       "type": "shell",
-      "inline": "{{GetRebootCommand .}}",
+      "inline": "{{GetRebootCommand}}",
       "expect_disconnect": true,
       "skip_clean": true,
-      "pause_after": "{{GetRebootPauseDuration .}}"
+      "pause_after": "{{GetRebootPauseDuration}}"
     },
     {
       "type": "shell",
@@ -409,7 +405,7 @@
     {{- if eq .OS "Flatcar" }}
         "sudo touch /boot/flatcar/first_boot"
     {{- end }}
-        "sudo {{GetWAAgentPath .}} -force -deprovision+user && export HISTSIZE=0 && sync || exit 125"
+        "sudo {{GetWAAgentPath}} -force -deprovision+user && export HISTSIZE=0 && sync || exit 125"
       ]
     }
   ]

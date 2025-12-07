@@ -3,7 +3,6 @@ package template
 import (
 	"bytes"
 	_ "embed"
-	"fmt"
 	"strings"
 	"text/template"
 
@@ -12,58 +11,53 @@ import (
 
 var (
 	//go:embed templates/packer.gtpl
-	packer         string
-	packerTemplate = template.Must(template.New("packer").Funcs(getFuncMap()).Parse(packer))
+	packerTemplate string
 )
 
 func BuildPackerTemplate(vhdConfig config.VHD) (string, error) {
-	packerTemplate, err := executePackerTemplate(vhdConfig)
-	if err != nil {
-		return "", fmt.Errorf("failed to execute packer go template: %w", err)
-	}
-	return packerTemplate, nil
-}
-
-func executePackerTemplate(vhdConfig config.VHD) (string, error) {
+	tmpl := template.Must(template.New("packer").Funcs(getFuncMap(vhdConfig)).Parse(packerTemplate))
 	var buffer bytes.Buffer
-	if err := packerTemplate.Execute(&buffer, vhdConfig); err != nil {
+	if err := tmpl.Execute(&buffer, vhdConfig); err != nil {
 		return "", err
 	}
 	return buffer.String(), nil
+
 }
 
-func getFuncMap() template.FuncMap {
+func getFuncMap(vhdConfig config.VHD) template.FuncMap {
 	return template.FuncMap{
-		"ToLower":                strings.ToLower,
-		"GetRebootCommand":       getRebootCommand,
-		"GetRebootPauseDuration": getRebootPauseDuration,
-		"GetWAAgentPath":         getWAAgentPath,
-	}
-}
-
-func getRebootCommand(vhdConfig config.VHD) string {
-	switch strings.ToLower(vhdConfig.OS) {
-	case "flatcar":
-		return "reboot"
-	default:
-		return "sudo reboot"
-	}
-}
-
-func getRebootPauseDuration(vhdConfig config.VHD) string {
-	switch strings.ToLower(vhdConfig.OS) {
-	case "flatcar":
-		return "0s"
-	default:
-		return "60s"
-	}
-}
-
-func getWAAgentPath(vhdConfig config.VHD) string {
-	switch strings.ToLower(vhdConfig.OS) {
-	case "mariner":
-		return "waagent"
-	default:
-		return "/usr/sbin/waagent"
+		"ToLower": strings.ToLower,
+		"GetArchitectureExtension": func() string {
+			switch strings.ToLower(vhdConfig.Architecture) {
+			case "arm64":
+				return "arm64"
+			default:
+				return "amd64"
+			}
+		},
+		"GetRebootCommand": func() string {
+			switch strings.ToLower(vhdConfig.OS) {
+			case "flatcar":
+				return "reboot"
+			default:
+				return "sudo reboot"
+			}
+		},
+		"GetRebootPauseDuration": func() string {
+			switch strings.ToLower(vhdConfig.OS) {
+			case "flatcar":
+				return "0s"
+			default:
+				return "60s"
+			}
+		},
+		"GetWAAgentPath": func() string {
+			switch strings.ToLower(vhdConfig.OS) {
+			case "mariner":
+				return "waagent"
+			default:
+				return "/usr/sbin/waagent"
+			}
+		},
 	}
 }
