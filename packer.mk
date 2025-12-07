@@ -8,58 +8,9 @@ ifeq (${ARCHITECTURE},ARM64)
 endif
 GOHOSTARCH = $(shell go env GOHOSTARCH)
 
-build-packer: generate-prefetch-scripts build-aks-node-controller build-lister-binary
-ifeq (${ARCHITECTURE},ARM64)
-	@echo "${MODE}: Building with Hyper-v generation 2 ARM64 VM"
-ifeq (${OS_SKU},Ubuntu)
-	@echo "Using packer template file vhd-image-builder-arm64-gen2.json"
-	@packer build -timestamp-ui  -var-file=vhdbuilder/packer/settings.json vhdbuilder/packer/vhd-image-builder-arm64-gen2.json
-else ifeq (${OS_SKU},CBLMariner)
-	@echo "Using packer template file vhd-image-builder-mariner-arm64.json"
-	@packer build -timestamp-ui  -var-file=vhdbuilder/packer/settings.json vhdbuilder/packer/vhd-image-builder-mariner-arm64.json
-else ifeq (${OS_SKU},AzureLinux)
-	@echo "Using packer template file vhd-image-builder-mariner-arm64.json"
-	@packer build -timestamp-ui  -var-file=vhdbuilder/packer/settings.json vhdbuilder/packer/vhd-image-builder-mariner-arm64.json
-else ifeq (${OS_SKU},Flatcar)
-	@echo "Using packer template file vhd-image-builder-flatcar-arm64.json"
-	@packer build -timestamp-ui  -var-file=vhdbuilder/packer/settings.json vhdbuilder/packer/vhd-image-builder-flatcar-arm64.json
-else
-	$(error OS_SKU was invalid ${OS_SKU})
-endif
-else ifeq (${ARCHITECTURE},X86_64)
-ifeq (${HYPERV_GENERATION},V2)
-	@echo "${MODE}: Building with Hyper-v generation 2 x86_64 VM"
-else ifeq (${HYPERV_GENERATION},V1)
-	@echo "${MODE}: Building with Hyper-v generation 1 X86_64 VM"
-else
-	$(error HYPERV_GENERATION was invalid ${HYPERV_GENERATION})
-endif
-ifeq (${OS_SKU},Ubuntu)
-ifeq ($(findstring cvm,$(FEATURE_FLAGS)),cvm)
-	@echo "Using packer template file vhd-image-builder-cvm.json"
-	@packer build -timestamp-ui  -var-file=vhdbuilder/packer/settings.json vhdbuilder/packer/vhd-image-builder-cvm.json
-else
-	@echo "Using packer template file vhd-image-builder-base.json"
-	@packer build -timestamp-ui  -var-file=vhdbuilder/packer/settings.json vhdbuilder/packer/vhd-image-builder-base.json
-endif
-else ifeq (${OS_SKU},CBLMariner)
-	@echo "Using packer template file vhd-image-builder-mariner.json"
-	@packer build -timestamp-ui  -var-file=vhdbuilder/packer/settings.json vhdbuilder/packer/vhd-image-builder-mariner.json
-else ifeq (${OS_SKU},AzureLinux)
-ifeq ($(findstring cvm,$(FEATURE_FLAGS)),cvm)
-	@echo "Using packer template file vhd-image-builder-mariner-cvm.json"
-	@packer build -timestamp-ui  -var-file=vhdbuilder/packer/settings.json vhdbuilder/packer/vhd-image-builder-mariner-cvm.json
-else
-	@echo "Using packer template file vhd-image-builder-mariner.json"
-	@packer build -timestamp-ui  -var-file=vhdbuilder/packer/settings.json vhdbuilder/packer/vhd-image-builder-mariner.json
-endif
-else ifeq (${OS_SKU},Flatcar)
-	@echo "Using packer template file vhd-image-builder-flatcar.json"
-	@packer build -timestamp-ui  -var-file=vhdbuilder/packer/settings.json vhdbuilder/packer/vhd-image-builder-flatcar.json
-else
-	$(error OS_SKU was invalid ${OS_SKU})
-endif
-endif
+build-packer: generate-prefetch-scripts build-aks-node-controller build-lister-binary generate-packer-template-linux
+	@echo "MODE: ${MODE}, HYPERV_GENERATION: ${HYPERV_GENERATION}, ARCHITECTURE: ${ARCHITECTURE}; Using generated packer template: linux-template.json"
+	@packer build -timestamp-ui -var-file=vhdbuilder/packer/settings.json vhdbuilder/packer/linux-template.json
 
 build-packer-windows:
 ifeq (${MODE},windowsVhdMode)
@@ -78,6 +29,10 @@ endif
 endif
 	@packer build -timestamp-ui -var-file=vhdbuilder/packer/settings.json vhdbuilder/packer/windows/windows-vhd-builder-sig.json
 endif
+
+generate-packer-template-linux:
+	@echo "Generating Linux packer template"
+	@bash -c "pushd vhdbuilder/packer/templater; go run main.go --output-path=../linux-template.json || exit 1; popd"
 
 build-imagecustomizer: generate-prefetch-scripts build-aks-node-controller build-lister-binary
 	@./vhdbuilder/packer/imagecustomizer/scripts/build-imagecustomizer-image.sh
