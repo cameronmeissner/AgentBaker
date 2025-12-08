@@ -192,12 +192,12 @@
             "parts/linux/cloud-init/artifacts/ubuntu/ubuntu-snapshot-update.sh",
             "parts/linux/cloud-init/artifacts/ubuntu/snapshot-update.service",
             "parts/linux/cloud-init/artifacts/ubuntu/snapshot-update.timer",
-        {{- end}}
+        {{- end }}
         {{- if eq .OS "Mariner" }}
             "parts/linux/cloud-init/artifacts/mariner/mariner-package-update.sh",
             "parts/linux/cloud-init/artifacts/mariner/package-update.service",
             "parts/linux/cloud-init/artifacts/mariner/package-update.timer",
-        {{- end}}
+        {{- end }}
             "vhdbuilder/scripts/linux/tool_installs.sh",
             "vhdbuilder/packer/pre-install-dependencies.sh",
             "vhdbuilder/packer/install-dependencies.sh",
