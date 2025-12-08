@@ -27,6 +27,9 @@ func BuildPackerTemplate(vhdConfig config.VHD) (string, error) {
 func getFuncMap(vhdConfig config.VHD) template.FuncMap {
 	return template.FuncMap{
 		"ToLower": strings.ToLower,
+		"EnableUbuntuAdvantage": func() bool {
+			return strings.EqualFold(vhdConfig.OS, "ubuntu") && (vhdConfig.FIPS || vhdConfig.FeatureFlags.CVM)
+		},
 		"GetArchitectureExtension": func() string {
 			switch strings.ToLower(vhdConfig.Architecture) {
 			case "arm64":

@@ -31,7 +31,9 @@
     "private_packages_url": "{{ "{{env `PRIVATE_PACKAGES_URL`}}" }}",
     "branch": "{{ "{{env `BRANCH`}}" }}",
     "vhd_build_timestamp": "{{ "{{user `VHD_BUILD_TIMESTAMP`}}" }}",
-{{- if and (eq .OS "Ubuntu") (or .FeatureFlags.CVM .TrustedLaunch) }}
+    "local_doca_repo_url": "{{ "{{env `LOCAL_DOCA_REPO_URL`}}" }}",
+    "continue_on_local_repo_download_error": "{{ "{{env `CONTINUE_ON_LOCAL_REPO_DOWNLOAD_ERROR`}}" }}",
+{{- if EnableUbuntuAdvantage }}
     "ua_token": "{{ "{{env `UA_TOKEN`}}" }}"
 {{- end }}
   },
@@ -140,6 +142,15 @@
       "destination": "/home/packer/tool_installs_distro.sh"
     },
     {
+      "type": "file",
+  {{- if eq .OS "Flatcar" }}
+      "source": "parts/linux/cloud-init/artifacts/flatcar/update_certs.service"
+  {{- else }}
+      "source": "parts/linux/cloud-init/artifacts/update_certs.service",
+  {{- end }}
+      "destination": "/home/packer/update_certs.service"
+    },
+    {
         "type": "file",
         "direction": "upload",
         "destination": "/home/packer/",
@@ -176,10 +187,17 @@
             "parts/linux/cloud-init/artifacts/ensure-no-dup.service",
             "parts/linux/cloud-init/artifacts/teleportd.service",
             "parts/linux/cloud-init/artifacts/setup-custom-search-domains.sh",
+            "parts/linux/cloud-init/artifacts/cis.sh",
+        {{- if eq .OS "Ubuntu" }}
             "parts/linux/cloud-init/artifacts/ubuntu/ubuntu-snapshot-update.sh",
             "parts/linux/cloud-init/artifacts/ubuntu/snapshot-update.service",
             "parts/linux/cloud-init/artifacts/ubuntu/snapshot-update.timer",
-            "parts/linux/cloud-init/artifacts/cis.sh",
+        {{- end}}
+        {{- if eq .OS "Mariner" }}
+            "parts/linux/cloud-init/artifacts/mariner/mariner-package-update.sh",
+            "parts/linux/cloud-init/artifacts/mariner/package-update.service",
+            "parts/linux/cloud-init/artifacts/mariner/package-update.timer",
+        {{- end}}
             "vhdbuilder/scripts/linux/tool_installs.sh",
             "vhdbuilder/packer/pre-install-dependencies.sh",
             "vhdbuilder/packer/install-dependencies.sh",
@@ -206,7 +224,7 @@
         {{- else}}
             "parts/linux/cloud-init/artifacts/pam-d-common-account",
         {{- end }}
-        {{- if eq .OSVersion "22.04" }}
+        {{- if or (eq .OSVersion "22.04") (eq .OSVersion "24.04") }}
             "parts/linux/cloud-init/artifacts/pam-d-common-auth-2204",
         {{- else }}
             "parts/linux/cloud-init/artifacts/pam-d-common-auth",
@@ -220,11 +238,6 @@
             "parts/linux/cloud-init/artifacts/cgroup-pressure-telemetry.sh",
             "parts/linux/cloud-init/artifacts/cgroup-pressure-telemetry.service",
             "parts/linux/cloud-init/artifacts/cgroup-pressure-telemetry.timer",
-        {{- if eq .OS "Flatcar" }}
-            "parts/linux/cloud-init/artifacts/flatcar/update_certs.service"
-        {{- else }}
-            "parts/linux/cloud-init/artifacts/update_certs.service",
-        {{- end }}
             "parts/linux/cloud-init/artifacts/update_certs.path",
             "parts/linux/cloud-init/artifacts/update_certs.sh",
             "parts/linux/cloud-init/artifacts/ci-syslog-watcher.path",
@@ -252,22 +265,28 @@
             "parts/linux/cloud-init/artifacts/docker_clear_mount_propagation_flags.conf",
             "parts/linux/cloud-init/artifacts/nvidia-modprobe.service",
             "parts/linux/cloud-init/artifacts/nvidia-docker-daemon.json",
-        {{- if eq .OS "Flatcar" }}
             "vhdbuilder/notice_flatcar.txt"
-        {{- else }}
             "vhdbuilder/notice.txt",
-        {{- end }}
             "parts/linux/cloud-init/artifacts/localdns.sh",
             "parts/linux/cloud-init/artifacts/localdns.service",
             "parts/linux/cloud-init/artifacts/localdns-delegate.conf",
             "parts/linux/cloud-init/artifacts/10_azure_nvidia",
-            "parts/linux/cloud-init/artifacts/51-azure-nvidia.cfg"
+            "parts/linux/cloud-init/artifacts/51-azure-nvidia.cfg",
+        {{- if and (and (eq .OS "Ubuntu") (eq .OSVersion "24.04")) .FeatureFlags.GB200 }}
+            "parts/linux/cloud-init/artifacts/ubuntu/doca.list",
+            "parts/linux/cloud-init/artifacts/ubuntu/doca.pub",
+            "parts/linux/cloud-init/artifacts/ubuntu/nvidia-2404.list",
+            "parts/linux/cloud-init/artifacts/ubuntu/nvidia.pub",
+            "parts/linux/cloud-init/artifacts/ubuntu/containerd-nvidia.toml",
+            "parts/linux/cloud-init/artifacts/ubuntu/modprobe-nvidia-parameters.conf",
+            "vhdbuilder/packer/gb200-mai-bom.json"
+        {{- end }}
         ]
     },
     {
       "type": "shell",
       "environment_vars": [
-    {{- if and (eq .OS "Ubuntu") (or .FeatureFlags.CVM .TrustedLaunch) }}
+    {{- if EnableUbuntuAdvantage }}
         "UA_TOKEN={{ "{{user `ua_token`}}" }}",
     {{- end }}
         "ENABLE_CGROUPV2={{ "{{user `enable_cgroupv2`}}" }}",
@@ -307,6 +326,8 @@
         "ENABLE_FIPS={{ "{{user `enable_fips`}}" }}",
         "IMG_SKU={{ "{{user `img_sku`}}" }}",
         "PRIVATE_PACKAGES_URL={{" {{user `private_packages_url`}}" }}",
+        "CONTINUE_ON_LOCAL_REPO_DOWNLOAD_ERROR={{ "{{user `continue_on_local_repo_download_error`}}" }}",
+        "LOCAL_DOCA_REPO_URL={{" {{user `local_doca_repo_url`}}" }}",
         "VHD_BUILD_TIMESTAMP={{ "{{user `vhd_build_timestamp`}}" }}"
       ],
       "inline": [
