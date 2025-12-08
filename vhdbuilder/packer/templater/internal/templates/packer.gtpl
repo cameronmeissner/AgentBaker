@@ -32,10 +32,7 @@
     "branch": "{{ "{{env `BRANCH`}}" }}",
     "vhd_build_timestamp": "{{ "{{user `VHD_BUILD_TIMESTAMP`}}" }}",
     "local_doca_repo_url": "{{ "{{env `LOCAL_DOCA_REPO_URL`}}" }}",
-    "continue_on_local_repo_download_error": "{{ "{{env `CONTINUE_ON_LOCAL_REPO_DOWNLOAD_ERROR`}}" }}",
-{{- if EnableUbuntuAdvantage }}
-    "ua_token": "{{ "{{env `UA_TOKEN`}}" }}"
-{{- end }}
+    "continue_on_local_repo_download_error": "{{ "{{env `CONTINUE_ON_LOCAL_REPO_DOWNLOAD_ERROR`}}" }}"
   },
   "builders": [
     {
@@ -188,7 +185,7 @@
             "parts/linux/cloud-init/artifacts/teleportd.service",
             "parts/linux/cloud-init/artifacts/setup-custom-search-domains.sh",
             "parts/linux/cloud-init/artifacts/cis.sh",
-        {{- if eq .OS "Ubuntu" }}
+        {{- if or (eq .OS "Ubuntu") (eq .OS "Flatcar") }}
             "parts/linux/cloud-init/artifacts/ubuntu/ubuntu-snapshot-update.sh",
             "parts/linux/cloud-init/artifacts/ubuntu/snapshot-update.service",
             "parts/linux/cloud-init/artifacts/ubuntu/snapshot-update.timer",
@@ -286,7 +283,7 @@
     {
       "type": "shell",
       "environment_vars": [
-    {{- if EnableUbuntuAdvantage }}
+    {{- if and (eq .OS "Ubuntu") (or .FIPS .FeatureFlags.CVM) }}
         "UA_TOKEN={{ "{{user `ua_token`}}" }}",
     {{- end }}
         "ENABLE_CGROUPV2={{ "{{user `enable_cgroupv2`}}" }}",
