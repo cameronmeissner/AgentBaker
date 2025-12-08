@@ -11,8 +11,6 @@ copyPackerFiles() {
   ETC_ISSUE_CONFIG_DEST=/etc/issue
   ETC_ISSUE_NET_CONFIG_SRC=/home/packer/etc-issue.net
   ETC_ISSUE_NET_CONFIG_DEST=/etc/issue.net
-  SSHD_CONFIG_SRC=/home/packer/sshd_config
-  SSHD_CONFIG_DEST=/etc/ssh/sshd_config
   MODPROBE_CIS_SRC=/home/packer/modprobe-CIS.conf
   MODPROBE_CIS_DEST=/etc/modprobe.d/CIS.conf
   FAILLOCK_CONF_SRC=/home/packer/faillock-CIS.conf
@@ -274,6 +272,8 @@ copyPackerFiles() {
   NOTICE_SRC=/home/packer/NOTICE.txt
   NOTICE_DEST=/NOTICE.txt
 
+  SSHD_CONFIG_SRC=/home/packer/sshd_config
+  SSHD_CONFIG_DEST=/etc/ssh/sshd_config
   if [ ${UBUNTU_RELEASE} = "22.04" ] && [ ${ENABLE_FIPS,,} = "true" ]; then
     SSHD_CONFIG_SRC=/home/packer/sshd_config_2204_fips
   fi
